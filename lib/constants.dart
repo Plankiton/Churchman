@@ -12,3 +12,16 @@ const kTextColor = Color(0xFF757575);
 
 const kAnimationDuration = Duration(milliseconds: 200);
 
+// Form Error
+final RegExp emailValidatorRegExp =
+    RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+const String kEmailNullError = "Por favor, insira seu Email";
+const String kInvalidEmailError = "Por favor, insira um Email válido";
+const String kPassNullError = "Por favor, insira uma senha válida";
+const String kShortPassError = "A senha deve conter mais de 8 caracteres";
+const String kMatchPassError = "Senha inválida";
+const String kNamelNullError = "Por favor, insira seu nome";
+const String kPhoneNumberNullError = "Por favor, insira seu número de telefone";
+const String kAddressNullError = "Por favor, insira seu endereço";
+
+

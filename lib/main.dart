@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_igreja/provider/users_provider.dart';
 import 'package:projeto_igreja/routes/app_routes.dart';
-import 'package:projeto_igreja/size_config.dart';
 import 'package:projeto_igreja/views/sign_In/sing_in_view.dart';
 import 'package:provider/provider.dart';
 
