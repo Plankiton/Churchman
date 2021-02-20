@@ -31,6 +31,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   provider: #Para generalização dos métodos alinhados ao BD - State Management
   flutter_svg: ^0.18.0 #Para usar padrão de cores SVG
+  flutter_datetime_picker: ^1.5.0
 
 dev_dependencies:
   flutter_test:

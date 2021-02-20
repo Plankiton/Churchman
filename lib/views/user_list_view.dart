@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_igreja/components/user_tile_component.dart';
 import 'package:projeto_igreja/provider/users_provider.dart';
-import 'package:projeto_igreja/views/sign_In/user_form_view.dart';
 import 'package:provider/provider.dart';
 
 class UserListView extends StatelessWidget {
@@ -16,12 +15,6 @@ class UserListView extends StatelessWidget {
         title: Text('Lista de Usuários'),
         actions: <Widget>[
           //ícone de adicionar usuário
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context).pushNamed(UserFormView.routeName);
-            },
-          ),
         ],
       ),
 

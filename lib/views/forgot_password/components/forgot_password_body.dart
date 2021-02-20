@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_igreja/components/default_button_component.dart';
+import 'package:projeto_igreja/components/default_open_text.dart';
 import 'package:projeto_igreja/components/form_error_component.dart';
 import 'package:projeto_igreja/components/no_account_component.dart';
 import 'package:projeto_igreja/constants.dart';
@@ -13,21 +14,15 @@ class ForgotPasswordBody extends StatelessWidget {
       width: double.infinity,
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+          padding:
+              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
           child: Column(
             children: [
               SizedBox(height: SizeConfig.screenHeight * 0.04),
-              Text(
-                'Esqueci Minha Senha',
-                style: TextStyle(
-                  fontSize: getProportionateScreenWidth(20),
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'Por favor, insira seu Email e lhe enviaremos\n um link para recuperação da conta',
-                textAlign: TextAlign.center,        
+              DefaultOpenText(
+                title: 'Esqueci Minha Senha',
+                subtitle:
+                    'Por favor, insira seu Email e lhe enviaremos\n um link para recuperação da conta',
               ),
               SizedBox(height: SizeConfig.screenHeight * 0.1),
               ForgotPasswordForm(),
@@ -48,7 +43,23 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   List<String> errors = [];
   String email;
   final _formKey = GlobalKey<FormState>();
-  
+
+  void addError({String error}) {
+    if (!errors.contains(error)) {
+      setState(() {
+        errors.add(error);
+      });
+    }
+  }
+
+  void removeError({String error}) {
+    if (errors.contains(error)) {
+      setState(() {
+        errors.remove(error);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -59,28 +70,20 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             keyboardType: TextInputType.emailAddress,
             onSaved: (newValue) => email = newValue,
             onChanged: (value) {
-              if (value.isNotEmpty && errors.contains(kEmailNullError)) {
-                setState(() {
-                  errors.remove(kEmailNullError);
-                });
-              } else if (emailValidatorRegExp.hasMatch(value) &&
-                  errors.contains(kInvalidEmailError)) {
-                setState(() {
-                  errors.remove(kInvalidEmailError);
-                });
+              if (value.isNotEmpty) {
+                removeError(error: kEmailNullError);
+              } else if (emailValidatorRegExp.hasMatch(value)) {
+                removeError(error: kInvalidEmailError);
               }
               return null;
             },
             validator: (value) {
-              if (value.isEmpty && !errors.contains(kEmailNullError)) {
-                setState(() {
-                  errors.add(kEmailNullError);
-                });
-              } else if (!emailValidatorRegExp.hasMatch(value) &&
-                  !errors.contains(kInvalidEmailError)) {
-                setState(() {
-                  errors.add(kInvalidEmailError);
-                });
+              if (value.isEmpty) {
+                addError(error: kEmailNullError);
+                return "";
+              } else if (!emailValidatorRegExp.hasMatch(value)) {
+                addError(error: kInvalidEmailError);
+                return "";
               }
               return null;
             },
@@ -98,14 +101,15 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           SizedBox(height: SizeConfig.screenHeight * 0.1),
           DefaultButton(
             text: 'Continue',
-            press: (){
-              if(_formKey.currentState.validate()){
+            press: () {
+              if (_formKey.currentState.validate()) {
                 //Função de recuperação da Senha
               }
             },
           ),
           SizedBox(height: SizeConfig.screenHeight * 0.1),
           NoAccountText(),
+          SizedBox(height: SizeConfig.screenHeight * 0.02),
         ],
       ),
     );

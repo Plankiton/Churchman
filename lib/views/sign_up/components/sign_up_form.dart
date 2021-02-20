@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_igreja/components/default_button_component.dart';
 import 'package:projeto_igreja/components/form_error_component.dart';
+import 'package:projeto_igreja/constants.dart';
 import 'package:projeto_igreja/size_config.dart';
-import 'package:projeto_igreja/views/forgot_password/forgot_password_view.dart';
-import '../../../constants.dart';
-import 'custom_svg_icon.dart';
+import 'package:projeto_igreja/views/complete_profile/complete_profile_view.dart';
+import 'package:projeto_igreja/views/sign_In/components/custom_svg_icon.dart';
 
-class SignForm extends StatefulWidget {
+class SignUpForm extends StatefulWidget {
   @override
-  _SignFormState createState() => _SignFormState();
+  _SignUpFormState createState() => _SignUpFormState();
 }
 
-class _SignFormState extends State<SignForm> {
+class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
+
   String email;
   String password;
+  String confirmPassword;
   final List<String> errors = [];
-  bool remember = false;
 
   void addError({String error}) {
     if (!errors.contains(error)) {
@@ -38,45 +39,65 @@ class _SignFormState extends State<SignForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        children: [
-          buildEmailFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildPasswordFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          Row(
-            children: [
-              Checkbox(
-                value: remember,
-                activeColor: kPrimaryColor,
-                onChanged: (value) {
-                  setState(() {
-                    remember = value;
-                  });
-                },
-              ),
-              Text("Lembrar de mim"),
-              Spacer(),
-              GestureDetector(
-                onTap: () =>
-                    Navigator.pushNamed(context, ForgotPasswordView.routeName),
-                child: Text('Esqueci minha senha',
-                    style: TextStyle(decoration: TextDecoration.underline)),
-              ),
-            ],
-          ),
-          FormError(errors: errors),
-          SizedBox(height: getProportionateScreenHeight(20)),
-          DefaultButton(
-            text: 'Continue',
-            press: () {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                //Vai para a Home;
-              }
-            },
-          ),
-        ],
+      child: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+        child: Column(
+          children: [
+            buildEmailFormField(),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildPasswordFormField(),
+            SizedBox(height: getProportionateScreenHeight(30)),
+            buildConfirmPasswordFormField(),
+            FormError(errors: errors),
+            SizedBox(height: getProportionateScreenHeight(40)),
+            DefaultButton(
+              text: "Continue",
+              press: () {
+                if (_formKey.currentState.validate()) {
+                  //Vá para a página de completar o perfil
+                  _formKey.currentState.save();
+                  Navigator.pushReplacementNamed(
+                      context, CompleteProfileView.routeName,
+                      arguments: [email, password]);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextFormField buildConfirmPasswordFormField() {
+    return TextFormField(
+      obscureText: true,
+      onSaved: (newValue) => confirmPassword = newValue,
+      onChanged: (value) {
+        if (value.isNotEmpty) {
+          removeError(error: kPassNullError);
+        } else if (value.isNotEmpty && password == confirmPassword) {
+          removeError(error: kMatchPassError);
+        }
+        confirmPassword = value;
+      },
+      validator: (value) {
+        if (value.isEmpty) {
+          addError(error: kPassNullError);
+          return "";
+        } else if ((password != value)) {
+          addError(error: kMatchPassError);
+          return "";
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: 'Confirmar Senha',
+        hintText: 'Reescreva sua Senha',
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: CustomSuffixIcon(
+          svgIcon: 'assets/icons/Lock.svg',
+        ),
       ),
     );
   }
@@ -91,7 +112,7 @@ class _SignFormState extends State<SignForm> {
         } else if (value.length >= 8) {
           removeError(error: kShortPassError);
         }
-        return null;
+        password = value;
       },
       validator: (value) {
         if (value.isEmpty) {

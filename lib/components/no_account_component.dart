@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_igreja/size_config.dart';
-import 'package:projeto_igreja/views/forgot_password/forgot_password_view.dart';
+import 'package:projeto_igreja/views/sign_up/sign_up_view.dart';
 
 import '../constants.dart';
 
@@ -20,7 +20,7 @@ class NoAccountText extends StatelessWidget {
 
         ),
         GestureDetector(
-          onTap: (){},
+          onTap: () => Navigator.pushNamed(context, SignUpView.routeName),
           child: Text(
             'Cadastrar',
             style: TextStyle(

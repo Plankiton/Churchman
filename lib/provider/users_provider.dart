@@ -41,7 +41,11 @@ class UsersProvider with ChangeNotifier {
                 id: id,
                 name: user.name,
                 email: user.email,
-                avatarUrl: user.avatarUrl,
+                data: user.data,
+                born: user.born,
+                state: user.state,
+                phone: user.phone,
+                sex: user.sex,
               ));
     }
 

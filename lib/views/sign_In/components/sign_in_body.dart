@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_igreja/components/default_open_text.dart';
 import 'package:projeto_igreja/components/no_account_component.dart';
 import 'package:projeto_igreja/components/social_card_component.dart';
 import 'package:projeto_igreja/size_config.dart';
@@ -18,19 +19,12 @@ class SignInBody extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: SizeConfig.screenHeight * 0.04,),           
-                Text("Seja Bem Vindo",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: getProportionateScreenWidth(28),
-                      fontWeight: FontWeight.bold,
-                    )),
-                Text(
-                  'Faça login com seu email e senha \nou continue com as redes sociais',
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: SizeConfig.screenHeight * 0.08,),           
+                DefaultOpenText(
+                  title: 'Seja Bem Vindo',
+                  subtitle: 'Faça login com seu email e senha \nou continue com as redes sociais'),
+                SizedBox(height: SizeConfig.screenHeight * 0.07,),           
                 SignForm(),
-                SizedBox(height: SizeConfig.screenHeight * 0.08,),           
+                SizedBox(height: getProportionateScreenHeight(40),),           
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -48,8 +42,9 @@ class SignInBody extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: getProportionateScreenHeight(20),),
+                SizedBox(height: getProportionateScreenHeight(40),),
                 NoAccountText(),
+                SizedBox(height: SizeConfig.screenHeight * 0.02),
               ],
             ),
           ),
