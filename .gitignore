@@ -39,3 +39,4 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+lib/views/sign_In/user_form_view.dart
