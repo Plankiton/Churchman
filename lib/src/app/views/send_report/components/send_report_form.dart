@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:projeto_igreja/src/app/components/default_button_component.dart';
 import 'package:projeto_igreja/src/app/components/form_error_component.dart';
-import 'package:projeto_igreja/src/app/components/theme_data.dart';
 import 'package:projeto_igreja/src/app/models/report.dart';
-import 'package:projeto_igreja/src/app/models/user.dart';
 import 'package:projeto_igreja/src/app/provider/reports_provider.dart';
 import 'package:projeto_igreja/src/app/provider/users_provider.dart';
 import 'package:projeto_igreja/src/app/views/cellular_view/cellular_view.dart';
@@ -132,9 +130,8 @@ class _SendReportFormState extends State<SendReportForm> {
                       theme: _formData['theme'],
                     ),
                   );
-                  //Vai para Home
-                  // Navigator.pushReplacementNamed(
-                  //     context, CellularView.routeName);
+                  Navigator.pushReplacementNamed(
+                      context, CellularView.routeName);
                 }
               },
             ),

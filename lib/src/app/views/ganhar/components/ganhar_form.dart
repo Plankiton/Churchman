@@ -6,7 +6,6 @@ import 'package:projeto_igreja/src/app/components/theme_data.dart';
 import 'package:projeto_igreja/src/app/models/user.dart';
 import 'package:projeto_igreja/src/app/provider/users_provider.dart';
 import 'package:projeto_igreja/src/app/views/cellular_view/cellular_view.dart';
-import 'package:projeto_igreja/src/app/views/home/home_view.dart';
 import 'package:projeto_igreja/src/app/views/sign_In/components/custom_svg_icon.dart';
 import 'package:provider/provider.dart';
 
