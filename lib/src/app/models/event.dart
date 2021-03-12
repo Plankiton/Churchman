@@ -8,12 +8,11 @@ class Event {
   final DateTime begin;
   final DateTime end;
 
-  const Event({
-      @required this.name,
+  const Event(
+      {@required this.name,
       @required this.description,
       @required this.cover,
       @required this.begin,
-      @required this.end, 
-      this.id
-    });
+      @required this.end,
+      this.id});
 }

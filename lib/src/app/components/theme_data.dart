@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import 'package:projeto_igreja/src/app/models/user.dart';
 
-
 ThemeData theme() {
   return ThemeData(
       scaffoldBackgroundColor: Colors.white,
@@ -62,17 +61,17 @@ AppBarTheme appBarTheme() {
 }
 
 CircleAvatar imgProfileCircle({User user}) {
-    final avatar = user.data == null || user.data.isEmpty
-        ? CircleAvatar(
-            radius: 25.0,
-            backgroundColor: Colors.transparent,
-            child: Icon(Icons.person),
-          )
-        : CircleAvatar(
-            backgroundImage: NetworkImage(user.data),
-            radius: 25.0,
-            backgroundColor: Colors.transparent,
-          );
+  final avatar = user.data == null || user.data.isEmpty
+      ? CircleAvatar(
+          radius: 25.0,
+          backgroundColor: Colors.transparent,
+          child: Icon(Icons.person),
+        )
+      : CircleAvatar(
+          backgroundImage: NetworkImage(user.data),
+          radius: 25.0,
+          backgroundColor: Colors.transparent,
+        );
 
-    return avatar;
-  }
+  return avatar;
+}

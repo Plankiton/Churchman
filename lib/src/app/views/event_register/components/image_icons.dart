@@ -4,7 +4,6 @@ import '../../../size_config.dart';
 import 'package:projeto_igreja/src/app/models/event.dart';
 import 'package:projeto_igreja/src/app/views/home/home_view.dart';
 
-
 import 'icon_card.dart';
 
 class ImageAndIcons extends StatelessWidget {

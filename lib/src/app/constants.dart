@@ -42,3 +42,10 @@ List<Map> drawerItems = [
   {'id': 5, 'icon': FontAwesomeIcons.plus, 'title': 'Cadastrar'},
   {'id': 6, 'icon': FontAwesomeIcons.scroll, 'title': 'Relatórios'},
 ];
+
+List<List<Color>> gradientColors = [
+  [Colors.blue[800], Colors.blue],
+  [Colors.pink, Colors.deepPurple[400]],
+  [Color(0xFFFFA53E), Color(0xFFFF7643)],
+  [Colors.deepPurpleAccent[400], Colors.blue[800]]
+];

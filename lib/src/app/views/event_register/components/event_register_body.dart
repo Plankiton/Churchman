@@ -11,7 +11,7 @@ class EventRegisterBody extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final Event event = ModalRoute.of(context).settings.arguments;
-    
+
     String _dateBegin = event.begin != null
         ? '${event.begin.day} - ${event.begin.month} - ${event.begin.year}'
         : 'Não Definido';
