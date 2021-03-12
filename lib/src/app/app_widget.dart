@@ -6,6 +6,7 @@ import 'package:projeto_igreja/src/app/views/sign_In/sing_in_module.dart';
 import 'package:provider/provider.dart';
 
 import 'components/theme_data.dart';
+import 'provider/cells_provider.dart';
 
 class AppWidget extends StatelessWidget {
   @override
@@ -20,6 +21,9 @@ class AppWidget extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (BuildContext context) => EventsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (BuildContext context) => CellsProvider(),
         ),
       ],
 

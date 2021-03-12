@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import '../../../constants.dart';
-import '../../../size_config.dart';
 import 'package:projeto_igreja/src/app/components/default_button_component.dart';
 import 'package:projeto_igreja/src/app/components/form_error_component.dart';
 import 'package:projeto_igreja/src/app/components/theme_data.dart';
 import 'package:projeto_igreja/src/app/models/user.dart';
 import 'package:projeto_igreja/src/app/provider/users_provider.dart';
+import 'package:projeto_igreja/src/app/views/cellular_view/cellular_view.dart';
 import 'package:projeto_igreja/src/app/views/home/home_view.dart';
 import 'package:projeto_igreja/src/app/views/sign_In/components/custom_svg_icon.dart';
 import 'package:provider/provider.dart';
 
-class CompleteProfileForm extends StatefulWidget {
+import '../../../constants.dart';
+import '../../../size_config.dart';
+
+class GanharForm extends StatefulWidget {
   @override
-  _CompleteProfileFormState createState() => _CompleteProfileFormState();
+  _GanharFormState createState() => _GanharFormState();
 }
 
-class _CompleteProfileFormState extends State<CompleteProfileForm> {
+class _GanharFormState extends State<GanharForm> {
   final _formKey = GlobalKey<FormState>();
   final List<String> errors = [];
   final Map<String, Object> _formData = {};
@@ -65,10 +67,6 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> arguments = ModalRoute.of(context).settings.arguments;
-    _formData['email'] = arguments[0];
-    _formData['password'] = arguments[1];
-    print(arguments);
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
@@ -87,7 +85,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
             FormError(errors: errors),
             SizedBox(height: getProportionateScreenHeight(40)),
             DefaultButton(
-              text: 'Continue',
+              text: 'Salvar',
               press: () {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
@@ -105,7 +103,8 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                     ),
                   );
                   //Vai para Home
-                  Navigator.pushReplacementNamed(context, HomeView.routeName);
+                  Navigator.pushReplacementNamed(
+                      context, CellularView.routeName);
                 }
               },
             ),

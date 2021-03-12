@@ -37,14 +37,13 @@ class EventsProvider with ChangeNotifier {
       _items.putIfAbsent(
           id,
           () => Event(
-            id: id, 
-            name: event.name,
-            description: event.description,
-            cover: event.cover,
-            begin: event.begin,
-            end: event.end,
-          )
-      );
+                id: id,
+                name: event.name,
+                description: event.description,
+                cover: event.cover,
+                begin: event.begin,
+                end: event.end,
+              ));
     }
 
     notifyListeners();
