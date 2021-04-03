@@ -7,23 +7,8 @@ class SignInBloc extends BlocBase {
   final SignInRepository repo;
 
   SignInBloc(this.repo);
-
-  var listPost = BehaviorSubject<List<PostModel>>();
-  Sink<List<PostModel>> get responseIn => listPost.sink;
-  Stream<List<PostModel>> get responseOut => listPost.stream;
-
-  void getPosts() async {
-    try {
-      var res = await repo.getPosts();
-      responseIn.add(res);
-    } catch (e) {
-      listPost.addError(e);
-    }
-  }
-
   @override
   void dispose() {
-    listPost.close();
     super.dispose();
   }
 }

@@ -1,5 +1,4 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_igreja/src/app/app_bloc.dart';
 import 'package:projeto_igreja/src/app/app_widget.dart';
@@ -15,8 +14,7 @@ class AppModule extends ModuleWidget {
   @override
   // TODO: implement dependencies
   List<Dependency> get dependencies => [
-    Dependency((i) => Dio()),
-    Dependency((i) => CustomDio(i.getDependency<Dio>()))
+    Dependency((i) => ChurchAPI())
   ];
 
   @override

@@ -18,7 +18,7 @@ class SignInModule extends ModuleWidget {
   // TODO: implement dependencies
   List<Dependency> get dependencies => [
         Dependency(
-            (i) => SignInRepository(AppModule.to.getDependency<CustomDio>()))
+            (i) => SignInRepository(ChurchAPI()))
       ];
 
   @override
