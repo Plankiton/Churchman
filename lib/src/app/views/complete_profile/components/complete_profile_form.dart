@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../../constants.dart';
@@ -14,14 +15,13 @@ import 'package:dio/dio.dart';
 import 'package:projeto_igreja/src/shared/custom_dio/custom_dio.dart';
 
 
+final api = ChurchAPI().client;
 class CompleteProfileForm extends StatefulWidget {
   @override
   _CompleteProfileFormState createState() => _CompleteProfileFormState();
 }
 
 class _CompleteProfileFormState extends State<CompleteProfileForm> {
-    final api = ChurchAPI().client;
-
     final _formKey = GlobalKey<FormState>();
     final List<String> errors = [];
     final Map<String, Object> _formData = {};
@@ -42,8 +42,8 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
     List listCivil = [
         'Casado(a)',
         'Solteiro(a)',
-        'Namorando',
-        'Noivando',
+        'Namorado(a)',
+        'Noivo(a)',
     ];
 
     void addError({String error}) {
@@ -72,10 +72,10 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
 
     @override
     Widget build(BuildContext context) {
-        final List<String> arguments = ModalRoute.of(context).settings.arguments;
+        final List<Object> arguments = ModalRoute.of(context).settings.arguments;
         _formData['email'] = arguments[0];
         _formData['password'] = arguments[1];
-        print(arguments);
+
         return Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -100,21 +100,29 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                                                     _formKey.currentState.save();
 
                                                     try {
-                                                        var response = await api.post('/user', data: {
-                                                            'name': _formData['name'],
+
+                                                        var lg_res = await api.post('/login', data: {
                                                             'email': _formData['email'],
-                                                            'data': _formData['data'],
-                                                            'sex': _formData['sex'],
-                                                            'phone': _formData['phone'],
-                                                            'born': _formData['born'],
-                                                            'state': _formData['state'],
-                                                            'pass': _formData['password']
+                                                            'pass':  _formData['password']
                                                         });
+
+                                                        var login = jsonDecode(lg_res.data)["data"];
+                                                        var id = login['user']['id'].toString();
+
+                                                        var response = await api.post('/user/'+id,
+                                                                data: {
+                                                                    'name': _formData['name'],
+                                                                    'sex': _formData['sex'],
+                                                                    'phone': _formData['phone'],
+                                                                    'born': _formData['born'],
+                                                                    'state': _formData['state'],
+                                                                }, options: Options(headers: {
+                                                                    'Authorization': login['token'],
+                                                                })
+                                                        );
                                                         Navigator.pushReplacementNamed(context, '/sign_in');
                                                     } on DioError catch (e) {
-                                                        Navigator.pushReplacementNamed(
-                                                                context, '/sign_up',
-                                                                arguments: ['Não foi possivel criar sua conta, por verifique se você esta conectado a internet']);
+                                                        addError(error: e.message);
                                                     }
 
 

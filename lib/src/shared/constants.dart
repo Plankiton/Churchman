@@ -1,4 +1,18 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 const BASE_URL = 'http://192.168.2.26';
+
+stGetKey(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString(key) ?? "";
+    return value;
+}
+
+stSetKey(String key, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, value);
+}
+
 
 const Map STATUS_MSG = {
     100: "continuar",

@@ -1,6 +1,6 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:projeto_igreja/src/app/views/sign_In/sing_in_bloc.dart';
-import 'package:projeto_igreja/src/app/views/sign_In/sing_in_module.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 import 'package:projeto_igreja/src/app/components/default_button_component.dart';
@@ -10,6 +10,7 @@ import 'package:projeto_igreja/src/app/views/home/home_view.dart';
 
 import 'package:dio/dio.dart';
 import 'package:projeto_igreja/src/shared/custom_dio/custom_dio.dart';
+import 'package:projeto_igreja/src/shared/constants.dart';
 
 import 'custom_svg_icon.dart';
 
@@ -25,8 +26,6 @@ class _SignFormState extends State<SignForm> {
     String password;
     final List<String> errors = [];
     bool remember = false;
-
-    var bloc = SignInModule.to.getBloc<SignInBloc>();
 
     @override
     void initState() {
@@ -95,10 +94,20 @@ class _SignFormState extends State<SignForm> {
                                                             'pass': password,
                                                         });
 
-                                                        Navigator.pushReplacementNamed(context, HomeView.routeName);
+                                                        var data = jsonDecode(response.data)["data"];
+                                                        if (remember) {
+                                                            stSetKey("user_token", data["token"]);
+                                                            stSetKey("user_data", jsonEncode(data["user"]));
+                                                        }
+
+                                                        Navigator.pushReplacementNamed(context, HomeView.routeName, arguments: [data["token"]]);
                                                     } on DioError catch (e) {
-                                                        addError(error: "Seu email ou senha estão errados.");
-                                                        throw(e.message);
+                                                        try {
+                                                            var data = jsonDecode(e.response.data);
+                                                            addError(error: data["message"]);
+                                                        } on DioError catch (e){
+                                                            addError(error: STATUS_MSG[e.response.statusCode]);
+                                                        }
                                                     }
                                                 }
                                             },

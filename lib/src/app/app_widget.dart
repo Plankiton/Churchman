@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_igreja/src/app/provider/events_provider.dart';
 import 'package:projeto_igreja/src/app/provider/users_provider.dart';
 import 'package:projeto_igreja/src/app/routes/app_routes.dart';
-import 'package:projeto_igreja/src/app/views/sign_In/sing_in_module.dart';
+import 'package:projeto_igreja/src/app/views/sign_In/sing_in_view.dart';
 import 'package:provider/provider.dart';
 
 import 'components/theme_data.dart';
@@ -32,7 +32,7 @@ class AppWidget extends StatelessWidget {
         title: 'Projeto Igreja',
         theme: theme(),
         routes: routes,
-        home: SignInModule(),
+        home: SignInView(),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -42,6 +43,10 @@ class _SignUpFormState extends State<SignUpForm> {
     }
 
     void setErrors(List<String> e) {
+        errors?.map((err) {
+            removeError(error: err);
+        });
+
         e?.map((err) {
             addError(error: err);
         });
@@ -69,6 +74,7 @@ class _SignUpFormState extends State<SignUpForm> {
                                     DefaultButton(
                                             text: "Continue",
                                             press: () async {
+                                                setErrors([]);
                                                 if (_formKey.currentState.validate()) {
                                                     //Vá para a página de completar o perfil
                                                     _formKey.currentState.save();
@@ -79,25 +85,20 @@ class _SignUpFormState extends State<SignUpForm> {
                                                             'pass': password,
                                                         });
 
+                                                        var data = jsonDecode(response.data)["data"];
+                                                        int id = data["id"];
+
                                                         Navigator.pushReplacementNamed(
                                                                 context, CompleteProfileView.routeName,
-                                                                arguments: [email, password]);
+                                                                arguments: [email, password, id]);
 
                                                     } on DioError catch (e) {
                                                         try {
-                                                            print(e.response.data);
-                                                            print(e.response.headers);
-                                                            print(e.response.request);
-                                                            final Map data = e.response.data;
-                                                            if (data["message"]) {
-                                                                addError(error: data["message"]);
-                                                            } else {
-                                                                addError(error: STATUS_MSG[e.response.statusCode]);
-                                                            }
-                                                        } catch (e){
-                                                            addError(error: 'Verifique sua conexão com a internet');
+                                                            var data = jsonDecode(e.response.data);
+                                                            addError(error: data["message"]);
+                                                        } on DioError catch (e){
+                                                            addError(error: STATUS_MSG[e.response.statusCode]);
                                                         }
-
                                                     }
 
                                                 }
