@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 import 'package:dio/dio.dart';
 import 'package:projeto_igreja/src/shared/custom_dio/custom_dio.dart';
-
+import 'package:projeto_igreja/src/shared/constants.dart';
 
 final api = ChurchAPI().client;
 class CompleteProfileForm extends StatefulWidget {
@@ -122,7 +122,12 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
                                                         );
                                                         Navigator.pushReplacementNamed(context, '/sign_in');
                                                     } on DioError catch (e) {
-                                                        addError(error: e.message);
+                                                        try {
+                                                            var data = jsonDecode(e.response.data);
+                                                            addError(error: data["message"]);
+                                                        } on DioError catch (e){
+                                                            addError(error: STATUS_MSG[e.response.statusCode]);
+                                                        }
                                                     }
 
 
