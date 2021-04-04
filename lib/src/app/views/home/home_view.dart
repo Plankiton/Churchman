@@ -7,6 +7,35 @@ import 'package:projeto_igreja/src/app/views/profile/profile_view.dart';
 import '../../size_config.dart';
 import 'components/home_body.dart';
 
+import 'package:dio/dio.dart';
+import 'package:projeto_igreja/src/shared/custom_dio/custom_dio.dart';
+import 'package:projeto_igreja/src/shared/constants.dart';
+import 'dart:convert';
+
+/*
+            onLoad: () async {
+                List<String> args = ModalRoute.of(context).settings.arguments;
+                var token = stGetKey("user_token");
+                if (token == "")
+                    if (args != null)
+                        token = args[0];
+
+                try {
+                    var res = await api.post("/verify", options: Options(headers: {
+                        "Authorization": token,
+                    }));
+
+                    var user = jsonDecode(res.data)["data"];
+                    stSetKey("user_data", user);
+                } on DioError catch(e) {
+                    var res = jsonDecode(stGetKey("user_data"));
+                } catch(e) {
+                    Navigator.pushReplacementNamed(context, '/sign_in');
+                }
+
+            },
+   */
+
 class HomeView extends StatelessWidget {
   static String routeName = '/home';
   @override
