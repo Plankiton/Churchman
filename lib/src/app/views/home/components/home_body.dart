@@ -13,7 +13,7 @@ class _HomeBodyState extends State<HomeBody> {
     return ListView(
       children: <Widget>[
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.7,
+          height: MediaQuery.of(context).size.height * 0.6,
           child: Column(
             children: [
               Expanded(child: PageViewWidget()),
@@ -21,7 +21,7 @@ class _HomeBodyState extends State<HomeBody> {
           ),
         ),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.7,
+          height: MediaQuery.of(context).size.height * 0.6,
           child: Column(
             children: [
               Expanded(child: PageViewWidget()),

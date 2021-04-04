@@ -12,8 +12,8 @@ class SlideTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double top = this.activePage ? 50 : 150;
-    final double blur = this.activePage ? 30 : 0;
+    final double top = this.activePage ? 40 : 60;
+    final double blur = this.activePage ? 15 : 0;
     final double offset = this.activePage ? 10 : 0;
 
     return InkWell(
@@ -21,7 +21,7 @@ class SlideTile extends StatelessWidget {
         heightFactor: 1.03,
         child: AnimatedContainer(
           duration: Duration(microseconds: 500),
-          margin: EdgeInsets.only(top: top, bottom: 50, right: 15),
+          margin: EdgeInsets.only(top: top, bottom: 30, right: 15),
           decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(events.all.elementAt(index).cover),
@@ -30,7 +30,7 @@ class SlideTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black87,
+                  color: Color(0x44000000),
                   blurRadius: blur,
                   offset: Offset(offset, offset),
                 )
