@@ -12,6 +12,7 @@ import 'package:projeto_igreja/src/shared/constants.dart';
 
 class SignInBody extends StatelessWidget {
     final api = ChurchAPI().client;
+    var verifyed = false;
 
     @override
     Widget build(BuildContext context) {
@@ -19,10 +20,17 @@ class SignInBody extends StatelessWidget {
         try {
             api.post("/verify", options: Options(headers: {
                 'Authorization': token,
-            }));
-
-            Navigator.pushReplacementNamed(context, HomeView.routeName, arguments: [token]);
+            })).then((res) {
+                if (res.statusCode == 200) {
+                    verifyed = true;
+                }
+            });
         } catch (e) {
+            verifyed = false;
+        }
+
+        if (verifyed) {
+            Navigator.pushReplacementNamed(context, HomeView.routeName, arguments: [token]);
         }
 
         SizeConfig().init(context);

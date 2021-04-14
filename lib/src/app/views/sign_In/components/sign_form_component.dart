@@ -102,12 +102,19 @@ class _SignFormState extends State<SignForm> {
 
                                                         Navigator.pushReplacementNamed(context, HomeView.routeName, arguments: [data["token"]]);
                                                     } on DioError catch (e) {
-                                                        try {
-                                                            var data = jsonDecode(e.response.data);
-                                                            addError(error: data["message"]);
-                                                        } on DioError catch (e){
-                                                            addError(error: STATUS_MSG[e.response.statusCode]);
+                                                        if (e.response != null) {
+                                                            removeError(error: "Sem conexão");
+                                                            try {
+                                                                var data = jsonDecode(e.response.data);
+                                                                addError(error: data["message"]);
+                                                            } catch (e) {
+                                                                addError(error: STATUS_MSG[e.response.statusCode]);
+                                                            }
+                                                        } else {
+                                                            addError(error: "Sem conexão");
                                                         }
+                                                    } catch (e) {
+                                                        addError(error: "Sem conexão");
                                                     }
                                                 }
                                             },
