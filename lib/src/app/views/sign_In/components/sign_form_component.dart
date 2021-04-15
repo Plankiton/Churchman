@@ -24,7 +24,6 @@ class _SignFormState extends State<SignForm> {
     final _formKey = GlobalKey<FormState>();
     String email;
     String password;
-    final List<String> errors = [];
     bool remember = false;
 
     @override
@@ -32,6 +31,7 @@ class _SignFormState extends State<SignForm> {
         super.initState();
     }
 
+    final List<String> errors = [];
     void addError({String error}) {
         if (!errors.contains(error)) {
             setState(() {
@@ -48,8 +48,17 @@ class _SignFormState extends State<SignForm> {
         }
     }
 
+    void cleanErrors() {
+        for (var i = 0; i < errors.length; i++) {
+            removeError(error: errors[i]);
+        };
+    }
+
     @override
     Widget build(BuildContext context) {
+        stSetKey("user_token", "");
+        stSetKey("user_data", "");
+
         return Form(
                 key: _formKey,
                 child: Column(
@@ -85,6 +94,7 @@ class _SignFormState extends State<SignForm> {
                                     DefaultButton(
                                             text: 'Continue',
                                             press: () async {
+                                                cleanErrors();
                                                 if (_formKey.currentState.validate()) {
                                                     _formKey.currentState.save();
 
@@ -99,8 +109,7 @@ class _SignFormState extends State<SignForm> {
                                                             stSetKey("user_token", data["token"]);
                                                             stSetKey("user_data", jsonEncode(data["user"]));
                                                         }
-
-                                                        Navigator.pushReplacementNamed(context, HomeView.routeName, arguments: [data["token"]]);
+                                                        Navigator.pushReplacementNamed(context, '/home', arguments: [data["token"]]);
                                                     } on DioError catch (e) {
                                                         if (e.response != null) {
                                                             removeError(error: "Sem conexão");
