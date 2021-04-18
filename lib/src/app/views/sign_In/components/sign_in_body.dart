@@ -46,7 +46,7 @@ class SignInBody extends StatelessWidget {
                                                     SizedBox(height: SizeConfig.screenHeight * 0.04,),           
                                                     DefaultOpenText(
                                                             title: 'Seja Bem Vindo',
-                                                            subtitle: 'Faça login com seu email e senha \nou continue com as redes sociais'),
+                                                            subtitle: 'Faça login com seu email e senha'),
                                                     SizedBox(height: SizeConfig.screenHeight * 0.07,),           
                                                     SignForm(),
                                                     SizedBox(height: getProportionateScreenHeight(40),),           
