@@ -9,6 +9,7 @@ class ChurchView extends StatelessWidget {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Igreja'),
         centerTitle: true,
