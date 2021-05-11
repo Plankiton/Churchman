@@ -24,7 +24,6 @@ class _SignFormState extends State<SignForm> {
     final _formKey = GlobalKey<FormState>();
     String email;
     String password;
-    bool remember = false;
 
     @override
     void initState() {
@@ -69,18 +68,6 @@ class _SignFormState extends State<SignForm> {
                             SizedBox(height: getProportionateScreenHeight(30)),
                             Row(
                                     children: [
-                                        Checkbox(
-                                                value: remember,
-                                                activeColor: kPrimaryColor,
-                                                onChanged: (value) {
-                                                    setState(() {
-                                                        remember = value;
-                                                    });
-                                                },
-                                        ),
-
-                                        Text('Lembrar de mim'),
-                                        Spacer(),
                                         GestureDetector(
                                                 onTap: () =>
                                                 Navigator.pushNamed(context, ForgotPasswordView.routeName),
@@ -105,10 +92,8 @@ class _SignFormState extends State<SignForm> {
                                                         });
 
                                                         var data = jsonDecode(response.data)["data"];
-                                                        if (remember) {
-                                                            stSetKey("user_token", data["token"]);
-                                                            stSetKey("user_data", jsonEncode(data["user"]));
-                                                        }
+                                                        stSetKey("user_token", data["token"]);
+                                                        stSetKey("user_data", jsonEncode(data["user"]));
                                                         Navigator.pushReplacementNamed(context, '/home', arguments: [data["token"]]);
                                                     } on DioError catch (e) {
                                                         if (e.response != null) {
@@ -148,9 +133,6 @@ class _SignFormState extends State<SignForm> {
                 validator: (value) {
                     if (value.isEmpty) {
                         addError(error: kPassNullError);
-                        return "";
-                    } else if (value.length < 8) {
-                        addError(error: kShortPassError);
                         return "";
                     }
                     return null;
