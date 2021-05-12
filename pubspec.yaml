@@ -33,6 +33,7 @@ dependencies:
   bloc_pattern: ^2.5.1
   rxdart:
   expansion_card: ^0.1.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

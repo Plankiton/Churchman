@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import '../../../constants.dart';
@@ -54,6 +55,7 @@ class _ChurchBodyState extends State<ChurchBody> {
     Map<String,dynamic> church = {
         "name": null,
     };
+    var cover = null;
     var clocking = null;
     void setChurch(Map<String,dynamic> data) {
         setState(() {
@@ -65,6 +67,18 @@ class _ChurchBodyState extends State<ChurchBody> {
             clocking = data;
         });
     }
+    void setCover(String data) {
+        setState(() {
+            cover = data;
+        });
+    }
+    Widget Cover(String uri) {
+        final UriData data = Uri.parse(uri).data;
+        var bytes = data.contentAsBytes();
+        return Image.memory(bytes);
+    }
+
+
     Widget Clocking(List<dynamic> clocking) {
         List<Widget> day_list = [];
         for (var i = 0; i < clocking.length; i++) {
@@ -87,101 +101,100 @@ class _ChurchBodyState extends State<ChurchBody> {
   Widget build(BuildContext context) {
       if (church["name"] == null) {
           try {
-              var token = stGetKey("user_token").then((r) {
-                  api.get("/celule/1", options: Options(headers: {
-                      'Authorization': r,
-                  })).then((res) {
-                      var data = jsonDecode(res.data);
+              api.get("/celule/1").then((res) {
+                  var data = jsonDecode(res.data);
 
-                      print("\n\n\n\n");
-                      print(data["data"]);
-                      print("\n\n\n\n");
-
-                      setChurch(data["data"]);
-                  }).catchError((e) {
-                      var data = jsonDecode(e.response.data);
-                      addError(error: data["message"]);
-                  });
+                  setChurch(data["data"]);
+              }).catchError((e) {
+                  var data = jsonDecode(e.response.data);
+                  addError(error: data["message"]);
               });
           } catch (e) {
               addError(error: "Não foi possível baixar dados da igreja");
+          }
+      }
+      if (cover == null) {
+          try {
+              api.get("/celule/1/cover").then((res) {
+                  setCover(res.data);
+              }).catchError((e) {
+              });
+          } catch (e) {
           }
       }
       if (clocking == null) {
           try {
-              var token = stGetKey("user_token").then((r) {
-                  // localhost:80/celule/1/events?periodic=true&l=7&p=1
-                  api.get("/celule/1/events",
-                          queryParameters: {
-                              'l': 7,
-                              'p': 1,
-                              'periodic': true,
-                          },
-                          options: Options(headers: {
-                              'Authorization': r,
-                          })).then((res) {
+              // localhost:80/celule/1/events?periodic=true&l=7&p=1
+              api.get("/celule/1/events",
+                      queryParameters: {
+                          'l': 7,
+                          'p': 1,
+                          'periodic': true,
+                      }).then((res) {
 
-                      var data = jsonDecode(res.data);
-                      var form = new DateFormat("""yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'""");
-                      for (var i = 0; i < data["data"].length; i++) {
-                          DateTime begin = form.parse(data["data"][i]["begin"]);
-                          DateTime end = form.parse(data["data"][i]["end"]);
-                          data["data"][i]["begin"] = "${begin.hour}:${begin.minute}";
-                          data["data"][i]["end"] = "${end.hour}:${end.minute}";
-                      }
+                  var data = jsonDecode(res.data);
+                  var form = new DateFormat("""yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'""");
+                  for (var i = 0; i < data["data"].length; i++) {
+                      DateTime begin = form.parse(data["data"][i]["begin"]);
+                      DateTime end = form.parse(data["data"][i]["end"]);
+                      data["data"][i]["begin"] = "${begin.hour}:${begin.minute}";
+                      data["data"][i]["end"] = "${end.hour}:${end.minute}";
+                  }
 
-                      setClocking(data["data"]);
+                  setClocking(data["data"]);
 
-                  }).catchError((e) {
-                      var data = jsonDecode(e.response.data);
-                      addError(error: data["message"]);
-                  });
-              });
+              }).catchError((e) {
+                          var data = jsonDecode(e.response.data);
+                          addError(error: data["message"]);
+                      });
           } catch (e) {
-              addError(error: "Não foi possível baixar dados da igreja");
+              addError(error: "Não foi possível baixar os horários dos cultos");
           }
       }
 
     return SafeArea(
-                child: SizedBox(
-                        width: double.infinity,
-                        child: Padding(
-                                padding:
-                                EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
-                                child: Column(children: [FormError(errors: errors),
-                                        SizedBox(height: SizeConfig.screenHeight * 0.04,),
-                                        DefaultOpenText(
-                                                title: church["name"]!=null?church["name"]:"Carregando...",
-                                                subtitle: ''),
+        child: SizedBox(
+            width: double.infinity,
+            child: Column(
+                children: [
+                    Container(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: SingleChildScrollView(
+                            padding: EdgeInsets.all(30.0),
+                            scrollDirection: Axis.vertical,
+                            child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+                                child: Column(children: [
+                                    FormError(errors: errors),
 
-                                                        SizedBox(height: SizeConfig.screenHeight * 0.07,),
-                                                        SizedBox(height: getProportionateScreenHeight(40),),
+                                    SizedBox(height: SizeConfig.screenHeight * 0.04,),
+                                    DefaultOpenText(
+                                        title: church["name"]!=null?church["name"]:"Carregando...",
+                                        subtitle: ''),
 
+                                    cover == null?Text(""):Cover(cover),
 
-                                        DefaultOpenText(
-                                                title: "Horarios dos cultos",
-                                                subtitle: ''),
+                                    DefaultOpenText(
+                                        title: "Horarios dos cultos",
+                                        subtitle: ''),
 
-                                        clocking == null?Text("Carregando..."):Clocking(clocking),
+                                    clocking == null?Text("Carregando..."):Clocking(clocking),
 
-                                                        SizedBox(height: getProportionateScreenHeight(40),),
-                                                        SizedBox(height: SizeConfig.screenHeight * 0.02),
+                                    SizedBox(height: getProportionateScreenHeight(40),),
+                                    SizedBox(height: SizeConfig.screenHeight * 0.02)],
+                                ),
+                            ),
+                        )),
 
-
-                                        SingleChildScrollView(
-                                            child: Column(
-                                                    children: [
-                                                        DefaultButton(
-                                                                text: "Criar Evento, Culto ou Post",
-                                                                press: () async {
-                                                                    setErrors([]);
-                                                                },
-                                                                ),
-                                                                ],
-                                                                ),
-                                                                )]),
-                        ),
-                        ),
-                        );
+                    DefaultButton(
+                        text: "Criar Evento, Culto ou Post",
+                        press: () async {
+                            setErrors([]);
+                        },
+                    )
+                ]
+            )
+        )
+    );
   }
 }
