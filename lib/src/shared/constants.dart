@@ -13,6 +13,7 @@ stSetKey(String key, String value) async {
     prefs.setString(key, value);
 }
 
+const List WEEK_DAY = [ "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sabado" ];
 
 const Map STATUS_MSG = {
     100: "continuar",
