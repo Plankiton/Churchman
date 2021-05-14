@@ -14,11 +14,11 @@ import 'package:projeto_igreja/src/app/views/sign_In/sing_in_view.dart';
 import 'package:projeto_igreja/src/app/views/sign_up/sign_up_view.dart';
 
 final Map<String, WidgetBuilder> routes = {
+  HomeView.routeName: (context) => HomeView(),
   SignInView.routeName: (context) => SignInView(),
   ForgotPasswordView.routeName: (context) => ForgotPasswordView(),
   SignUpView.routeName: (context) => SignUpView(),
   CompleteProfileView.routeName: (context) => CompleteProfileView(),
-  HomeView.routeName: (context) => HomeView(),
   EventRegisterView.routeName: (context) => EventRegisterView(),
   ProfileView.routeName: (context) => ProfileView(),
   CellularView.routeName: (context) => CellularView(),

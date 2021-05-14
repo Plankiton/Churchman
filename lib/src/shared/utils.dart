@@ -26,3 +26,19 @@ Future<Map<String,dynamic>> getUserData(String else_token) async {
     }
 }
 
+dynamic getUserToken() async {
+    var token = null;
+    try {
+        token = await stGetKey("user_token");
+        var res = await api.post("/verify", options: Options(headers: {
+            "Authorization": token,
+        }));
+        return token;
+
+    } catch(e) {
+        throw(e);
+    }
+
+    return token;
+}
+

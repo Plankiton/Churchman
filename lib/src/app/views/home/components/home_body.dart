@@ -15,24 +15,6 @@ class HomeBody extends StatefulWidget {
 class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
-      var token = stGetKey("user_token");
-      final List<Object> arguments = ModalRoute.of(context).settings.arguments;
-      if (arguments != null) {
-        token = arguments[0];
-      }
-
-      try {
-          api.post("/verify", options: Options(headers: {
-              'Authorization': token,
-          })).then((res) {
-              if (res.statusCode != 200) {
-                  Navigator.pushReplacementNamed(context, '/sign_in');
-              }
-          });
-      } catch (e) {
-      }
-
-
     return ListView(
       children: <Widget>[
         SizedBox(

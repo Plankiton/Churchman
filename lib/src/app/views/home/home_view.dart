@@ -11,6 +11,8 @@ class HomeView extends StatelessWidget {
   static String routeName = '/home';
   @override
   Widget build(BuildContext context) {
+
+        print("\n\nON HOME!!\n\n");
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -22,7 +24,7 @@ class HomeView extends StatelessWidget {
           shape: RoundedRectangleBorder(),
           brightness: Brightness.light,
           centerTitle: true,
-          title: Text('FILADÉLFIA FORTALEZA',
+          title: Text('Nucleo 12',
               style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

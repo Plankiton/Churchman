@@ -82,7 +82,7 @@ class _ChurchBodyState extends State<ChurchBody> {
     Widget Clocking(List<dynamic> clocking) {
         List<Widget> day_list = [];
         for (var i = 0; i < clocking.length; i++) {
-            day_list.add(Padding( 
+            day_list.add(Padding(key: new Key("Clocking day ${i}"),
                     padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10)),
                     child:Center(child:Column(children: [
                         Text(WEEK_DAY[clocking[i]["weekly_day"]-1]),
@@ -91,27 +91,25 @@ class _ChurchBodyState extends State<ChurchBody> {
                 ]))));
         }
 
-        return SingleChildScrollView(
-                  child: Row(children: day_list),
-                  scrollDirection: Axis.horizontal);
+        return Row(key: new Key("Clocking"), children: day_list);
 
     }
 
   @override
   Widget build(BuildContext context) {
       if (church["name"] == null) {
-          try {
-              api.get("/celule/1").then((res) {
-                  var data = jsonDecode(res.data);
+          api.get("/celule/1").then((res) {
+              var data = jsonDecode(res.data);
 
-                  setChurch(data["data"]);
-              }).catchError((e) {
+              setChurch(data["data"]);
+          }).catchError((e) {
+              try {
                   var data = jsonDecode(e.response.data);
                   addError(error: data["message"]);
-              });
-          } catch (e) {
-              addError(error: "Não foi possível baixar dados da igreja");
-          }
+              } catch (e) {
+                  addError(error: "Sem conexão");
+              }
+          });
       }
       if (cover == null) {
           try {
@@ -123,33 +121,33 @@ class _ChurchBodyState extends State<ChurchBody> {
           }
       }
       if (clocking == null) {
-          try {
-              // localhost:80/celule/1/events?periodic=true&l=7&p=1
-              api.get("/celule/1/events",
-                      queryParameters: {
-                          'l': 7,
-                          'p': 1,
-                          'periodic': true,
-                      }).then((res) {
+          // localhost:80/celule/1/events?periodic=true&l=7&p=1
+          api.get("/celule/1/events",
+                  queryParameters: {
+                      'l': 7,
+                      'p': 1,
+                      'periodic': true,
+                  }).then((res) {
 
-                  var data = jsonDecode(res.data);
-                  var form = new DateFormat("""yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'""");
-                  for (var i = 0; i < data["data"].length; i++) {
-                      DateTime begin = form.parse(data["data"][i]["begin"]);
-                      DateTime end = form.parse(data["data"][i]["end"]);
-                      data["data"][i]["begin"] = "${begin.hour}:${begin.minute}";
-                      data["data"][i]["end"] = "${end.hour}:${end.minute}";
-                  }
+              var data = jsonDecode(res.data);
+              var form = new DateFormat("""yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'""");
+              for (var i = 0; i < data["data"].length; i++) {
+                  DateTime begin = form.parse(data["data"][i]["begin"]);
+                  DateTime end = form.parse(data["data"][i]["end"]);
+                  data["data"][i]["begin"] = "${begin.hour}:${begin.minute}";
+                  data["data"][i]["end"] = "${end.hour}:${end.minute}";
+              }
 
-                  setClocking(data["data"]);
+              setClocking(data["data"]);
 
-              }).catchError((e) {
+          }).catchError((e) {
+                      try {
                           var data = jsonDecode(e.response.data);
                           addError(error: data["message"]);
-                      });
-          } catch (e) {
-              addError(error: "Não foi possível baixar os horários dos cultos");
-          }
+                      } catch (e) {
+                          addError(error: "Sem conexão");
+                      }
+                  });
       }
 
     return SafeArea(
@@ -160,31 +158,34 @@ class _ChurchBodyState extends State<ChurchBody> {
                     Container(
                         height: MediaQuery.of(context).size.height * 0.8,
                         child: SingleChildScrollView(
-                            padding: EdgeInsets.all(30.0),
+                            padding: EdgeInsets.all(50.0),
                             scrollDirection: Axis.vertical,
-                            child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
                                 child: Column(children: [
                                     FormError(errors: errors),
 
-                                    SizedBox(height: SizeConfig.screenHeight * 0.04,),
+                                    SizedBox(height: MediaQuery.of(context).size.height * 0.04,),
                                     DefaultOpenText(
                                         title: church["name"]!=null?church["name"]:"Carregando...",
                                         subtitle: ''),
 
                                     cover == null?Text(""):Cover(cover),
+                                    SizedBox(height: MediaQuery.of(context).size.height * 0.04,),
 
                                     DefaultOpenText(
                                         title: "Horarios dos cultos",
                                         subtitle: ''),
+                                    SizedBox(height: MediaQuery.of(context).size.height * 0.04,),
 
-                                    clocking == null?Text("Carregando..."):Clocking(clocking),
+                                    clocking == null?Text("Carregando..."):
+                                    SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Clocking(clocking)
+                                    ),
 
                                     SizedBox(height: getProportionateScreenHeight(40),),
-                                    SizedBox(height: SizeConfig.screenHeight * 0.02)],
+                                    SizedBox(height: MediaQuery.of(context).size.height * 0.02)],
                                 ),
-                            ),
-                        )),
+                    )),
 
                     DefaultButton(
                         text: "Criar Evento, Culto ou Post",

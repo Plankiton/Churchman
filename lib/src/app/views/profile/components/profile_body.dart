@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import '../../../constants.dart';
-import '../../../size_config.dart';
+import 'package:projeto_igreja/src/shared/utils.dart';
+import 'package:projeto_igreja/src/shared/constants.dart';
+import 'package:projeto_igreja/src/app/constants.dart';
+import 'package:projeto_igreja/src/app/size_config.dart';
 import 'package:projeto_igreja/src/app/components/default_open_text.dart';
 import 'package:projeto_igreja/src/app/components/no_account_component.dart';
 import 'package:projeto_igreja/src/app/components/social_card_component.dart';
@@ -52,14 +54,14 @@ class _ProfileBodyState extends State<ProfileBody> {
         });
     }
 
-    Map<String,dynamic> church = {
+    Map<String,dynamic> user = {
         "name": null,
     };
     var cover = null;
     var clocking = null;
-    void setChurch(Map<String,dynamic> data) {
+    void setUser(Map<String,dynamic> data) {
         setState(() {
-            church = data;
+            user = data;
         });
     }
     void setClocking(List<dynamic> data) {
@@ -78,33 +80,31 @@ class _ProfileBodyState extends State<ProfileBody> {
         return Image.memory(bytes);
     }
 
-
-    Widget Clocking(List<dynamic> clocking) {
-        List<Widget> day_list = [];
-        for (var i = 0; i < clocking.length; i++) {
-            day_list.add(Padding( 
-                    padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(10)),
-                    child:Center(child:Column(children: [
-                        Text(WEEK_DAY[clocking[i]["weekly_day"]-1]),
-                        Text("Inicio: ${clocking[i]["begin"]}"),
-                        Text("Fim:    ${clocking[i]["end"]}"),
-                ]))));
-        }
-
-        return SingleChildScrollView(
-                  child: Row(children: day_list),
-                  scrollDirection: Axis.horizontal);
-
-    }
+    var token = null;
 
   @override
   Widget build(BuildContext context) {
-      if (church["name"] == null) {
+      if (token == null) {
           try {
-              api.get("/celule/1").then((res) {
+              getUserToken().then((res) {
+                  setState(() {
+                      token = res;
+                  });
+              });
+          } catch(e) {
+              Navigator.pushReplacementNamed(context, '/sign_in');
+          }
+      }
+
+      if (user["name"] == null && token != null) {
+          try {
+              api.get("/user/1", options: Options(
+                    headers: {
+                        "Authorization": token,
+                    })).then((res) {
                   var data = jsonDecode(res.data);
 
-                  setChurch(data["data"]);
+                  setUser(data["data"]);
               }).catchError((e) {
                   var data = jsonDecode(e.response.data);
                   addError(error: data["message"]);
@@ -113,42 +113,16 @@ class _ProfileBodyState extends State<ProfileBody> {
               addError(error: "Não foi possível baixar dados da igreja");
           }
       }
-      if (cover == null) {
+      if (cover == null && token != null) {
           try {
-              api.get("/celule/1/cover").then((res) {
+              api.get("/user/1/profile", options: Options(
+                    headers: {
+                        "Authorization": token,
+                    })).then((res) {
                   setCover(res.data);
               }).catchError((e) {
               });
           } catch (e) {
-          }
-      }
-      if (clocking == null) {
-          try {
-              // localhost:80/celule/1/events?periodic=true&l=7&p=1
-              api.get("/celule/1/events",
-                      queryParameters: {
-                          'l': 7,
-                          'p': 1,
-                          'periodic': true,
-                      }).then((res) {
-
-                  var data = jsonDecode(res.data);
-                  var form = new DateFormat("""yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'""");
-                  for (var i = 0; i < data["data"].length; i++) {
-                      DateTime begin = form.parse(data["data"][i]["begin"]);
-                      DateTime end = form.parse(data["data"][i]["end"]);
-                      data["data"][i]["begin"] = "${begin.hour}:${begin.minute}";
-                      data["data"][i]["end"] = "${end.hour}:${end.minute}";
-                  }
-
-                  setClocking(data["data"]);
-
-              }).catchError((e) {
-                          var data = jsonDecode(e.response.data);
-                          addError(error: data["message"]);
-                      });
-          } catch (e) {
-              addError(error: "Não foi possível baixar os horários dos cultos");
           }
       }
 
@@ -169,16 +143,10 @@ class _ProfileBodyState extends State<ProfileBody> {
 
                                     SizedBox(height: SizeConfig.screenHeight * 0.04,),
                                     DefaultOpenText(
-                                        title: church["name"]!=null?church["name"]:"Carregando...",
+                                        title: user["name"]!=null?user["name"]:"Carregando...",
                                         subtitle: ''),
 
                                     cover == null?Text(""):Cover(cover),
-
-                                    DefaultOpenText(
-                                        title: "Horarios dos cultos",
-                                        subtitle: ''),
-
-                                    clocking == null?Text("Carregando..."):Clocking(clocking),
 
                                     SizedBox(height: getProportionateScreenHeight(40),),
                                     SizedBox(height: SizeConfig.screenHeight * 0.02)],
